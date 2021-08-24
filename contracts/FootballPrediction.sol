@@ -29,11 +29,7 @@ contract FootballPrediction {
         returns (uint256 fixtureId)
     {}
 
-    function updateResults(
-        fixtureId,
-        team1_score,
-        team2_score
-    ) public restricted {
+    function updateResults() public restricted {
         //struct for multiple scores?
     }
 
