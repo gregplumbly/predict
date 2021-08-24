@@ -6,32 +6,47 @@ contract FootballPrediction {
     address public manager;
     address[] public players;
     address[] public winners;
-    
-    // struct with game and date
-    // fixtures array of structs
+
+    struct Fixture {
+        string gameId; // e.g MNUvCHE or ARSvBRE
+        uint256 date;
+        string home_score;
+        string away_score;
+        string result; // e.g. win, lose, or draw (not sure if this is needed as derived from home and away score)
+    }
+
+    Fixture[] fixtures;
+
     // mappings
-    
+
     constructor() {
         manager = msg.sender;
     }
-    
-    function createFixtures (string memory _game, uint256 _matchdate) public restricted returns (uint fixtureId) {
+
+    function createFixtures(string memory _game, uint256 _matchdate)
+        public
+        restricted
+        returns (uint256 fixtureId)
+    {}
+
+    function updateResults(
+        fixtureId,
+        team1_score,
+        team2_score
+    ) public restricted {
+        //struct for multiple scores?
     }
 
-    function updateResults (team1_score, team2_score) public restricted { //struct for multiple scores?
-    }
-    
-    function calculateWinners()  public restricted {
+    function calculateWinners() public restricted {}
+
+    function makePrediction() public {
+        // user would also send transfer for lottery ticket with predictions
     }
 
-    function makePrediction() public { // user would also send transfer for lottery ticket with predictions
-    }
-
-    function withdrawWinnings() public {
-    }
+    function withdrawWinnings() public {}
 
     modifier restricted() {
-      require (msg.sender == manager);
-      _;
+        require(msg.sender == manager);
+        _;
     }
 }
