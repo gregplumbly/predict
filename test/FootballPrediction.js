@@ -14,8 +14,6 @@ describe("Football Prediction", () => {
   });
 
   it("Should set the manager as the contract deployer", async function () {
-    console.log(await footballPrediction.manager());
-    console.log(owner.address);
     expect(await footballPrediction.manager()).to.equal(owner.address);
   });
 });
