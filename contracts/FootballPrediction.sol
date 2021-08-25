@@ -37,9 +37,12 @@ contract FootballPrediction {
 
     function calculateWinners() public restricted {}
 
-    function makePrediction() public {
-        // user would also send transfer for lottery ticket with predictions
-    }
+    function makePredictionAndEnter() public payable {
+        require(msg.value > .01 ether ); //exact amount?
+        players.push(msg.sender);
+        // user would also submit transactions at this point?
+
+    } // do we need a balance function?
 
     function withdrawWinnings() public {}
 
