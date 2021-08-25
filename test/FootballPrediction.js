@@ -13,7 +13,12 @@ describe("Football Prediction", () => {
     [owner, addr1] = await ethers.getSigners();
   });
 
-  it("Should set the manager as the contract deployer", async function () {
-    expect(await footballPrediction.manager()).to.equal(owner.address);
+  it("Should set the owner as the contract deployer", async function () {
+    expect(await footballPrediction.owner()).to.equal(owner.address);
+    expect((await footballPrediction.balanceOfPot()).toString()).to.equal("0");
+  });
+
+  it("the balance of the pot should be zero initially", async function () {
+    expect((await footballPrediction.balanceOfPot()).toString()).to.equal("0");
   });
 });

@@ -3,9 +3,10 @@
 pragma solidity >=0.7.0 <0.9.0;
 
 contract FootballPrediction {
-    address public manager;
+    address public owner;
     address[] public players;
     address[] public winners;
+    string test = 'a test';
 
     enum result_type { win, lose, draw} // refers to home team
 
@@ -22,7 +23,7 @@ contract FootballPrediction {
     // mappings
 
     constructor() {
-        manager = msg.sender;
+        owner = msg.sender;
     }
 
     function createFixtures(string memory _game, uint256 _matchdate)
@@ -40,14 +41,18 @@ contract FootballPrediction {
     function makePredictionAndEnter() public payable {
         require(msg.value > .01 ether ); //exact amount?
         players.push(msg.sender);
-        // user would also submit transactions at this point?
+        // user would also submit predictions at this point?
 
     } // do we need a balance function?
 
     function withdrawWinnings() public {}
 
+    function balanceOfPot() public view returns (uint256) {
+        return address(this).balance;
+    }
+
     modifier restricted() {
-        require(msg.sender == manager);
+        require(msg.sender == owner);
         _;
     }
 }
