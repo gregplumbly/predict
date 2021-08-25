@@ -6,12 +6,11 @@ contract FootballPrediction {
     address public owner;
     address[] public players;
     address[] public winners;
-    string test = 'a test';
 
     enum result_type { win, lose, draw} // refers to home team
 
     struct Fixture {
-        string gameId; // e.g MNUvCHE or ARSvBRE
+        string gameId; // e.g MNUCHE or ARSBRE
         uint256 date;
         uint16 home_score;
         uint16 away_score;
@@ -42,13 +41,14 @@ contract FootballPrediction {
     function calculateWinners() public restricted {}
 
     function makePredictionAndEnter() public payable { //add parameters for fixtures //start with one game
+    //TODO disable predictions for game -1day
         require(msg.value > .01 ether ); //exact amount?
         players.push(msg.sender);
         // user would also submit predictions at this point?
 
-    } // do we need a balance function?
+    } 
 
-    // new function to see live fixtures
+    //TODO new function to see live fixtures
 
 
     function withdrawWinnings() public {}
