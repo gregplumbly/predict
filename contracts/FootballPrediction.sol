@@ -18,6 +18,9 @@ contract FootballPrediction {
         result_type result;
     }
 
+    // Add a max date for making prediction. match date -1
+    // Handle error if submit after closing time - use require
+
     Fixture[] fixtures;
 
     // mappings
@@ -26,7 +29,7 @@ contract FootballPrediction {
         owner = msg.sender;
     }
 
-    function createFixtures(string memory _game, uint256 _matchdate)
+    function createFixture(string memory _game, uint256 _matchdate) //start with one function
         public
         restricted
         returns (uint256 fixtureId)
@@ -38,12 +41,15 @@ contract FootballPrediction {
 
     function calculateWinners() public restricted {}
 
-    function makePredictionAndEnter() public payable {
+    function makePredictionAndEnter() public payable { //add parameters for fixtures //start with one game
         require(msg.value > .01 ether ); //exact amount?
         players.push(msg.sender);
         // user would also submit predictions at this point?
 
     } // do we need a balance function?
+
+    // new function to see live fixtures
+
 
     function withdrawWinnings() public {}
 
