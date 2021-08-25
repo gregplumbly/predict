@@ -7,12 +7,14 @@ contract FootballPrediction {
     address[] public players;
     address[] public winners;
 
+    enum result_type { win, lose, draw} 
+
     struct Fixture {
         string gameId; // e.g MNUvCHE or ARSvBRE
         uint256 date;
         string home_score;
         string away_score;
-        string result; // e.g. win, lose, or draw (not sure if this is needed as derived from home and away score)
+        result_type result;
     }
 
     Fixture[] fixtures;
