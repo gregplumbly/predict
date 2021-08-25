@@ -1,6 +1,5 @@
-# predict
-
-
+# Predict
+<img width="743" alt="Screenshot 2021-08-25 at 10 21 16" src="https://user-images.githubusercontent.com/4796/130764596-7003847d-a93f-41d3-9483-6336c9bdbdfb.png">
 
 The full list of Premier League short codes is:
 
