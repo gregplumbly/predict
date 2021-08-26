@@ -52,17 +52,20 @@ contract FootballPrediction {
         return address(this).balance;
     }
     
-    function makePrediction(uint _fixtureId, uint16 _homeScore, uint16 _awayScore, uint _date)
+    function makePrediction(uint _fixtureId, uint16 _homeScore, uint16 _awayScore)
         external payable {
         
-        // Allow prediction entry only if done before match start time
-        require(block.timestamp < _date);
+        // Check _fixtureId is valid
+        require(_fixtureId <= fixtures.length, "Fixture Id is invalid.");
+
+        // Allow prediction entry only if it's entered before the match start time
+        require(block.timestamp < fixtures[_fixtureId].date, "Predictions not allowed after match start.");
         
         // Make sure they paid :) For now amount to bet is fixed to 0.01 ether for simplicity
-        require(msg.value == .01 ether);
+        require(msg.value == .01 ether, "Oops - please pay to play!");
         
         // Maintain a list of unique players and also a map of their address and prediction
-        if (playerToPrediction[msg.sender].length > 0) {
+        if (playerToPrediction[msg.sender].length == 0) {
             players.push(msg.sender);
         }
 
