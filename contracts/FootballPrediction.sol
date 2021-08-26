@@ -116,7 +116,13 @@ contract FootballPrediction {
         }
     }
 
-    function withdrawWinnings() public {}    
+    function withdrawWinnings() public { 
+        uint amount_due = playerToAmountDue[msg.sender];
+        playerToAmountDue[msg.sender] = 0 ether;
+        // https://solidity-by-example.org/sending-ether/
+        (bool sent, bytes memory data) = payable(msg.sender).call{value: amount_due}("");
+        require(sent, "Failed to send Ether");
+    }    
 
     modifier restricted() {
         require(msg.sender == owner);
