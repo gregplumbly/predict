@@ -56,7 +56,7 @@ contract FootballPrediction {
         external payable {
         
         // Check _fixtureId is valid
-        require(_fixtureId <= fixtures.length, "Fixture Id is invalid.");
+        require(_fixtureId < fixtures.length, "Fixture Id is invalid.");
 
         // Allow prediction entry only if it's entered before the match start time
         require(block.timestamp < fixtures[_fixtureId].date, "Predictions not allowed after match start.");
