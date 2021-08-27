@@ -2,12 +2,15 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract FootballPrediction {
+import "@openzeppelin/contracts/access/Ownable.sol"; //https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
+
+
+contract FootballPrediction is Ownable {
     
     event NewFixture(bytes32 fixtureId, string gameId, uint date);
     event WithdrawWinnings(address player);
 
-    address public owner;
+     address private _owner;
     address[] public players;
     address[] public winners;
     bytes32[] public fixtureIds;
@@ -33,11 +36,7 @@ contract FootballPrediction {
     mapping (address => Prediction[]) public playerToPrediction;
     mapping (address => uint) public playerToAmountDue;
 
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function createFixture(string memory _game, uint _matchDate) external restricted 
+    function createFixture(string memory _game, uint _matchDate) external onlyOwner 
         returns (bytes32) {
 
         bytes32 fixtureId = keccak256(abi.encode(_game,_matchDate));
@@ -83,7 +82,7 @@ contract FootballPrediction {
         playerToPrediction[msg.sender].push(Prediction(_fixtureId, _homeScore, _awayScore, result));
     }
 
-    function updateResultForMatch(bytes32 _fixtureId, uint16 _homeScore, uint16 _awayScore) external restricted {
+    function updateResultForMatch(bytes32 _fixtureId, uint16 _homeScore, uint16 _awayScore) external onlyOwner {
         Fixture storage matchToUpdate = fixtures[_fixtureId];
         matchToUpdate.homeScore = _homeScore;
         matchToUpdate.awayScore = _awayScore;
@@ -97,7 +96,7 @@ contract FootballPrediction {
         }
     }
 
-    function calculateWinners() external restricted {
+    function calculateWinners() external onlyOwner {
 
         Prediction[] storage playerPredictions;
 
@@ -134,10 +133,4 @@ contract FootballPrediction {
         // Emit a withdraw winning event anytime a player withdraws. UI code will listen to this and take any action as needed
         emit WithdrawWinnings(msg.sender);
     }    
-
-    modifier restricted() {
-        require(msg.sender == owner);
-        _;
-    }
-
 }
