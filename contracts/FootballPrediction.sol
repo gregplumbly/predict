@@ -10,7 +10,6 @@ contract FootballPrediction is Ownable {
     event NewFixture(bytes32 fixtureId, string gameId, uint date);
     event WithdrawWinnings(address player);
 
-     address private _owner;
     address[] public players;
     address[] public winners;
     bytes32[] public fixtureIds;
