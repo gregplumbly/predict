@@ -4,11 +4,12 @@ pragma solidity >=0.7.0 <0.9.0;
 
 contract FootballPrediction {
     
-    event NewFixture(uint fixtureId, string gameId, uint date);
+    event NewFixture(bytes32 fixtureId, string gameId, uint date);
 
     address public owner;
     address[] public players;
     address[] public winners;
+    bytes32[] public fixtureIds;
 
     enum resultType {win, lose, draw, noResult} // refers to home team
 
@@ -20,15 +21,14 @@ contract FootballPrediction {
         resultType result;
     }
 
-    Fixture[] public fixtures;
-
     struct Prediction {
-        uint fixtureId;
+        bytes32 fixtureId;
         uint16 homeScore;
         uint16 awayScore;
         resultType result;
     }
 
+    mapping (bytes32 => Fixture) public fixtures;
     mapping (address => Prediction[]) public playerToPrediction;
     mapping (address => uint) public playerToAmountDue;
 
@@ -37,10 +37,11 @@ contract FootballPrediction {
     }
 
     function createFixture(string memory _game, uint _matchDate) external restricted 
-        returns (uint) {
+        returns (bytes32) {
 
-        fixtures.push(Fixture(_game, _matchDate, 0, 0, resultType.noResult));
-        uint fixtureId = fixtures.length - 1;
+        bytes32 fixtureId = keccak256(abi.encode(_game,_matchDate));
+        fixtures[fixtureId] = Fixture(_game, _matchDate, 0, 0, resultType.noResult);
+        fixtureIds.push(fixtureId);
         
         // Emit an event any time new fixture is created. UI code will listen to this and display
         emit NewFixture(fixtureId, _game, _matchDate);
@@ -52,11 +53,11 @@ contract FootballPrediction {
         return address(this).balance;
     }
     
-    function makePrediction(uint _fixtureId, uint16 _homeScore, uint16 _awayScore)
+    function makePrediction(bytes32 _fixtureId, uint16 _homeScore, uint16 _awayScore)
         external payable {
         
         // Check _fixtureId is valid
-        require(_fixtureId < fixtures.length, "Fixture Id is invalid.");
+        require(fixtures[_fixtureId].date != 0, "Fixture Id is invalid.");
 
         // Allow prediction entry only if it's entered before the match start time
         require(block.timestamp < fixtures[_fixtureId].date, "Predictions not allowed after match start.");
@@ -81,7 +82,7 @@ contract FootballPrediction {
         playerToPrediction[msg.sender].push(Prediction(_fixtureId, _homeScore, _awayScore, result));
     }
 
-    function updateResultForMatch(uint _fixtureId, uint16 _homeScore, uint16 _awayScore) external restricted {
+    function updateResultForMatch(bytes32 _fixtureId, uint16 _homeScore, uint16 _awayScore) external restricted {
         Fixture storage matchToUpdate = fixtures[_fixtureId];
         matchToUpdate.homeScore = _homeScore;
         matchToUpdate.awayScore = _awayScore;
@@ -114,6 +115,11 @@ contract FootballPrediction {
         for (uint i = 0; i < winners.length; i++) {
             playerToAmountDue[winners[i]] += perMatchWinnings;
         }
+
+        // Delete fixtures once done to save storage
+        for (uint i = 0; i < fixtureIds.length; i++) {
+            delete fixtures[fixtureIds[i]];
+        }
     }
 
     function withdrawWinnings() public { 
@@ -128,4 +134,5 @@ contract FootballPrediction {
         require(msg.sender == owner);
         _;
     }
+
 }
