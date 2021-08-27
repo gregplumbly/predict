@@ -121,6 +121,7 @@ contract FootballPrediction {
         for (uint i = 0; i < fixtureIds.length; i++) {
             delete fixtures[fixtureIds[i]];
         }
+        delete fixtureIds;
     }
 
     function withdrawWinnings() public { 
