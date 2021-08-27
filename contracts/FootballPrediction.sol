@@ -2,11 +2,14 @@
 
 pragma solidity >=0.7.0 <0.9.0;
 
-contract FootballPrediction {
+import "@openzeppelin/contracts/access/Ownable.sol"; //https://github.com/OpenZeppelin/openzeppelin-contracts/blob/master/contracts/access/Ownable.sol
+
+
+contract FootballPrediction is Ownable{
     
     event NewFixture(uint fixtureId, string gameId, uint date);
 
-    address public owner;
+    address private _owner;
     address[] public players;
     address[] public winners;
 
@@ -32,11 +35,7 @@ contract FootballPrediction {
     mapping (address => Prediction[]) public playerToPrediction;
     mapping (address => uint) public playerToAmountDue;
 
-    constructor() {
-        owner = msg.sender;
-    }
-
-    function createFixture(string memory _game, uint _matchDate) external restricted 
+    function createFixture(string memory _game, uint _matchDate) external onlyOwner 
         returns (uint) {
 
         fixtures.push(Fixture(_game, _matchDate, 0, 0, resultType.noResult));
@@ -81,7 +80,7 @@ contract FootballPrediction {
         playerToPrediction[msg.sender].push(Prediction(_fixtureId, _homeScore, _awayScore, result));
     }
 
-    function updateResultForMatch(uint _fixtureId, uint16 _homeScore, uint16 _awayScore) external restricted {
+    function updateResultForMatch(uint _fixtureId, uint16 _homeScore, uint16 _awayScore) external onlyOwner {
         Fixture storage matchToUpdate = fixtures[_fixtureId];
         matchToUpdate.homeScore = _homeScore;
         matchToUpdate.awayScore = _awayScore;
@@ -95,7 +94,7 @@ contract FootballPrediction {
         }
     }
 
-    function calculateWinners() external restricted {
+    function calculateWinners() external onlyOwner {
 
         Prediction[] storage playerPredictions;
 
@@ -118,8 +117,5 @@ contract FootballPrediction {
 
     function withdrawWinnings() public {}    
 
-    modifier restricted() {
-        require(msg.sender == owner);
-        _;
-    }
+
 }

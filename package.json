@@ -20,5 +20,8 @@
   "files": [
     "template",
     "template.json"
-  ]
+  ],
+  "dependencies": {
+    "@openzeppelin/contracts": "^4.3.1"
+  }
 }
