@@ -5,6 +5,7 @@ pragma solidity >=0.7.0 <0.9.0;
 contract FootballPrediction {
     
     event NewFixture(bytes32 fixtureId, string gameId, uint date);
+    event WithdrawWinnings(address player);
 
     address public owner;
     address[] public players;
@@ -128,6 +129,9 @@ contract FootballPrediction {
         // https://solidity-by-example.org/sending-ether/
         (bool sent, bytes memory data) = payable(msg.sender).call{value: amount_due}("");
         require(sent, "Failed to send Ether");
+
+        // Emit a withdraw winning event anytime a player withdraws. UI code will listen to this and take any action as needed
+        emit WithdrawWinnings(msg.sender);
     }    
 
     modifier restricted() {
