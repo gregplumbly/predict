@@ -62,7 +62,7 @@ contract FootballPrediction is Ownable {
         require(block.timestamp < fixtures[_fixtureId].date, "Predictions not allowed after match start.");
         
         // Make sure they paid :)
-        require(msg.value != 0 ether, "Oops - please pay to play!");
+        require(msg.value > 0 ether, "Oops - please pay to play!");
         
         // Maintain a list of unique players and also a map of their address and prediction
         if (playerToPrediction[msg.sender].length == 0) {
