@@ -61,8 +61,8 @@ contract FootballPrediction is Ownable {
         // Allow prediction entry only if it's entered before the match start time
         require(block.timestamp < fixtures[_fixtureId].date, "Predictions not allowed after match start.");
         
-        // Make sure they paid :) For now amount to bet is fixed to 0.01 ether for simplicity
-        require(msg.value == .01 ether, "Oops - please pay to play!");
+        // Make sure they paid :)
+        require(msg.value != 0 ether, "Oops - please pay to play!");
         
         // Maintain a list of unique players and also a map of their address and prediction
         if (playerToPrediction[msg.sender].length == 0) {
