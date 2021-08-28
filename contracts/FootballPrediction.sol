@@ -102,7 +102,7 @@ contract FootballPrediction is Ownable {
         for (uint i = 0; i < players.length; i++) {
             playerPredictions = playerToPrediction[players[i]];
 
-            for (uint j = 0; i < playerPredictions.length; j++) {
+            for (uint j = 0; j < playerPredictions.length; j++) {
                 if (playerPredictions[j].result == fixtures[playerPredictions[j].fixtureId].result) {
                     winners.push(players[i]);
                 }
